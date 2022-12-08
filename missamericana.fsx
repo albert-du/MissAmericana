@@ -238,9 +238,15 @@ let tracksStats tracks =
     for x, y in points do
         printfn "%i, %f" x y
 
+    let x = 
+        List.map (fun x -> float x.Writers.Length, float x.Words.Length) tracks
+        |> linreg
+
+    printfn $"\nlinreg: \ny = {x.M} * x + {x.B}\nr = {x.R}"
+
     let x = linreg (List.map (fun (x, y) -> float x, y) points)
 
-    printfn $"\ny = {x.M} * x + {x.B}\nr = {x.R}"
+    printfn $"\nlinreg (averages):\ny = {x.M} * x + {x.B}\nr = {x.R}"
     printfn "\nAverage Distinct Words, Writers"
 
     let points =
@@ -251,19 +257,25 @@ let tracksStats tracks =
     for x, y in points do
         printfn "%i, %f" x y
 
+    let x = 
+        List.map (fun x -> float x.Writers.Length, float x.Frequencies.Keys.Count) tracks
+        |> linreg
+
+    printfn $"\nlinreg: \ny = {x.M} * x + {x.B}\nr = {x.R}"
+
     let x = linreg (List.map (fun (x, y) -> float x, y) points)
 
-    printfn $"\ny = {x.M} * x + {x.B}\nr = {x.R}"
+    printfn $"\nlinreg (average): \ny = {x.M} * x + {x.B}\nr = {x.R}"
     printfn "\nAll Words:"
     List.collect (fun x -> x.Words) tracks
     |> List.countBy id
-    |> List.sortByDescending (fun (a, b) -> b, a)
+    |> List.sortBy (fun (a, b) -> -b, a)
     |> List.iter (fun (x, y) -> printfn $"%-15s{x} {y}")
 
     for track in tracks do
         printfn $"\nWords of \"{track.Name}\":"
         Seq.map (fun (KeyValue(x, y)) -> x, y) track.Frequencies
-        |> Seq.sortByDescending (fun (a, b) -> b, a)
+        |> Seq.sortBy (fun (a, b) -> -b, a)
         |> Seq.iter (fun (x, y) -> printfn $"%-15s{x} {y}")
 
 let generateReport album =

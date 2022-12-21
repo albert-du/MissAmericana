@@ -1,4 +1,3 @@
-#clear
 open System
 open System.IO
 
@@ -12,74 +11,8 @@ let fileout location func =
         use ws = File.CreateText location
         Console.SetOut ws
         func ()
-        printfn $"\nMiss Americana --- {DateTime.Now:s}"
     finally
         Console.SetOut out
-
-let banner () =
-    //https://textart4u.blogspot.com/2013/03/taylor-swift-ascii-text-picture.html
-    printfn
-        "
-█▒░▓▒░░░░══░═░▒▒▒▒██▓▒░░▒▓▓▓▓▓▓█▓▓▓█████▒
-█▒▒▒═══───────░░▒░▓▓▓▒▒▒▓▓▓▓▓▓▓▓▓▓██████▓
-█▓▓▒░░░░░══░══▒▒▒▒▒▓▓▒▓▓████▓▓▓▓█████████
-▓▓▓▒░░░░══════░▒▒▓▒▓▓▓▒▒▓▓▓███████▓▓▓██▓▓
-██▓░░░░░═══════▒▒▓▒░▒▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓█▓█
-██▓░░══░░══════░▒▒▒▒▒▒▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓█▓▓█
-██▓░═══░░═════─═▒▒▒▓▒▒▒▓▓▓▓▓▓▓▒▓▓▓▓▒▓▓▒██
-█▓▒░═══════════─░▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▒▓▒▓█░▓██
-█▓▒░══░══════════▒▒░▒▒▒▒▒▒▒▓▓▒▒▒▒▓▓▓░░██▓
-█▓▒░═══════════──═▒▒░▒▒▒▒▒▒▒▓▒▓▒▒▓▓░░▓▓▒▒
-█▓▒░═══════════───░▒▒░░▒▒▒▒▒▒▒▒▒▒▒░░▒▓▒░▒
-█▓▓░═════════════──░▒▒▒░░░░░░▒▒▒░░▒▓██▓▓▒
-██▓░═══░══════════─═▒▒▓▒▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▒
-██▓░══▒▒▒░──═══════─═▒▒▓▒▒▒▒▒▒▒▒▒▒▒▒▒░▒▒▒
-██▒░═░░═▒▓▒░════════─═▒▒▒▒▓▓█▓▓▓▓▒░░░▒▒▒▓
-█▓▒░═══░═░▓█▓▒════════░▒▓████▓█▓▓▓▓▓▓▓▓██
-██▒═══░▒▒▒▒▓█▓▒░░═════░▒▓████████████████
-█▓▒══░▒▓██████▓▒▒░═══▒▒▓██████████▓▓████▓
-█▓░─══▒█████████▒════░▓███▓██████▓▓▓▓███▓
-█▓░─══▓██▓▓█▓▒▓▓█░───░▓▒█▒░▓█▒▓██▓▒▒▓███▓
-██░─══▒▓█░░▓▒─▓▒▒▒───▒▒─▒▒▒▒▒▓▓▓▒▒▒▒▒▓██▓
-██▒─═══░▓▒▒▒░░░──▒═──▒═──░░░░▒▒▒▒░▒▒▒▓██▓
-▓█▒─════▒▒▒░░░═──░═─═░═─══░▒▒▒▒▒░░░▒▒▓███
-██▓──═══▒▒▒▒▒░═─═░═─═░═───══░░░════▒▒▓███
-███──════░░░══──═░═─═░══──────═════░▒▓███
-█▓▒──══════─────═══─════───════════░▒▓███
-▓▒▒═─══════────════─═════───═══════░▒▓█▓█
-█═░═─════════──════──════────═════░░▒▓▓▓█
-█░═░─═░════─═──═░══──════───══════░▒▒▓▓▓▓
-█▒─░──░════────═░══──═░░═───════░═░▒▒▓▓▓█
-██▒▓──░░════───═░══──═░▒═───═══░░░▒▒▒▓█░▓
-█▒░█▒─░░░═══───░░═───═░░═─════░░░▒▒▒▒█▓▒▒
-█▒░▓▒─░░░═════─══─────░░═─════░░░▒▒▒▒▓▓▒▒
-█▓═▒▒─═░░═════─═░░───═▒▒═─═══░░░░▒▒▒▒█▓░█
-██▒▓█─═░░░════─═▒▓░─═▒▒▒░─════░░░░▒▒▒████
-█████─═░░░════──▓█▓░▒███═─════░░░░▒▒▒████
-█████──░░░░════─▓██████▓──═══░░░░▒▒▒▒████
-█████░─░░░═════─═▒▓██▒░═─════░░░░▒▒▒▒████
-█████▒─░░░══════──═▒▒═──════░░░░░▒▒░▓██▓▓
-█▓▓▓█▓─░░░════════──═───════░░░░▒▒▒░▓██▓▓
-█▓▓▓██─═░░░═════──═──═░───══░░░░▒▒░▒███▓▓
-█▓▓▓██░═░░░░░══──▓█▓▒██▓▒═░░░░░░▒░▒▒███▓▓
-▓▒▓▓██▒═░░░░░░═░███████████▒░░░░▒▒░▓███▓▓
-▒░▒▓██▓░░░░══░▓███████████▒═░░░▒░▒▒████▓▓
-▒░▒▒▓█▓▒░░░░══▒██▓▓▓█▓▓▒▓▒─═░░▒▒░▒▓███▓▓▓
-░░▒▒██▒▓▒░░░░═─▒▓▒▒▒▓▒░▒█▒─═░░▒░▒▒█████▓▓
-░░▒▒█▓░█▓░▒░░══▒█▓░▒▒░▒██░═░░▒▒▒▒▓█████▓▓
-▒░░▓█▒░██▒▒▒▒░═░██▓▓▓███▓═░░░▒▒▒▒██████▓▓
-▒░░▓▓░░▓█▓▒▒▒░░░▓███████░═░░░▒▒▒▓███████▓
-▒░▒▒▒═░▓█▓▒▒▒░░░░▓████▓▒─═░░░▒▒▓▓███████▓
-▒▒▒▒░═▒▓█▓▒▒▒░░░═░▒▒▒░───══░░▒▓▓▓█████▓██
-▒▒▒▒═░▒▒▓▓▒▓▒░░░═────────══░▒▒█▓▓█████▓▓█
-▓▒═▒═▒▒▒▓▒▒██▒░═══──────═══░▒██▓▓██████▓▓
-▓░═▒═▒░▒▒▒▒▓█▓▒░░════════░░▒██▓▓▓██████▓▓
-▓═░▒░░═▒▒▒▒▓██▓░░═─══════░▒▓█▓▓▓▓█████▓█▓
-▒░▒▒░░═▓▒▒▒▒▓██▓▒░═══░░░▒▒▓██▓▓▓▓██████▓▓
-▒─▒▒░─▓█░▒▒▒▓▓██▓▒▒▒▒▒▒▒▒▓██▓▓▓▓▓▓█████▓▓
-▒─░▒═▒█▓░▒▒▒▒▓▓▓██▓▓▓▓▓▓██▓▓▓▓▓▓▒▓█████▓▓
-▒═▒▒░▓█▒░▒▒▒▒▒▓▓▓████████▓▓▓▓▓▓▓▒▓█████▓▓
-▒─══▒██░─═░░░░▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░▓█████▓▓"
 
 let tstaylorswift = "Taylor Swift" // 1
 let tsfearless = "Fearless" // 2
@@ -206,6 +139,24 @@ let tracksStats tracks =
         |> String.concat ", "
         |> printfn "%2i %-*s%-4i%s" t.Index w t.Name t.Writers.Length
 
+    printfn "\nIndex, Writers, Words, Distinct Words, Track"
+    tracks
+    |> List.sortBy (fun x -> x.Index)
+    |> List.iter (fun x -> printfn $"{x.Index}, {x.Writers.Length}, {x.Words.Length}, {x.Frequencies.Keys.Count}, {x.Name}")
+
+    printfn "\nTrack, Writers, Words, Distinct Words"
+    tracks
+    |> List.sortBy (fun x -> x.Index)
+    |> List.iter (fun x -> printfn $"{x.Name}, {x.Writers.Length}, {x.Words.Length}, {x.Frequencies.Keys.Count}")
+
+    printfn "\nWriters, Number of tracks"
+    tracks
+    |> List.countBy (fun x -> x.Writers.Length)
+    |> List.sortBy fst
+    |> List.iter (fun (w, c) -> printfn $"{w}, {c}")
+
+    printfn ""
+
     printfn "\nWriters, Distinct Words, Name"
 
     List.sortBy (fun x -> (x.Writers.Length, x.Frequencies.Keys.Count)) tracks
@@ -276,7 +227,7 @@ let tracksStats tracks =
         printfn $"\nWords of \"{track.Name}\":"
         Seq.map (fun (KeyValue(x, y)) -> x, y) track.Frequencies
         |> Seq.sortBy (fun (a, b) -> -b, a)
-        |> Seq.iter (fun (x, y) -> printfn $"%-15s{x} {y}")
+        |> Seq.iter (fun (x, y) -> printfn $"{x}, {y}")
 
 let generateReport album =
     printfn $"* **\n** *\n **  Project Miss Americana\n** *\n* **\n\nStatistics for {album}"
@@ -297,13 +248,53 @@ let generateDiscographyReport () =
     tracks |> tracksStats
 
 let s = DateTime.Now
-banner ()
 
 fileout "./output/stats/ALL.txt" generateDiscographyReport
 
 for album in ts do
     fileout $"./output/stats/{album}.txt" (fun _ -> generateReport album)
 
-let f = DateTime.Now
+fileout $"./output/data.md" (fun _ -> 
+    printfn "# Additional Data\n"
+    printfn "## Taylor Swift"
+    let tracks = fromAlbum tstaylorswift |> List.sortBy (fun x -> x.Index)
+    
+    List.map (fun x -> string x.Writers.Length) tracks
+    |> String.concat ", "
+    |> printfn "\nwriters = {%s}"
 
-printfn $"Evaluated in {(f - s).TotalSeconds} seconds"
+    List.sumBy (fun x -> x.Writers.Length) tracks
+    |> printfn "sum = %i"
+
+    let squares = List.map (fun x -> float x.Writers.Length ** 2) tracks
+    List.map string squares
+    |> String.concat ", " 
+    |> printfn "squares = {%s}"
+    List.sum squares
+    |> printfn "sum of squares = %f"
+
+    List.map (fun x -> string x.Words.Length) tracks
+    |> String.concat ", "
+    |> printfn "\nwords = {%s}"
+
+    List.sumBy (fun x -> x.Words.Length) tracks
+    |> printfn "sum = %i"
+
+    let squares2 = List.map (fun x -> float x.Words.Length ** 2) tracks
+    List.map string squares2
+    |> String.concat ", " 
+    |> printfn "squares = {%s}"
+    List.sum squares2
+    |> printfn "sum of squares = %f"
+    let xy = List.map (fun x -> x.Writers.Length * x.Words.Length) tracks
+    List.map string xy
+    |> String.concat ", " 
+    |> printfn "\nxy = {%s}"
+
+    List.sum xy
+    |> printfn "sum xy = %i"
+    
+)
+
+
+printfn $"Evaluated in {(DateTime.Now - s).TotalSeconds} seconds"

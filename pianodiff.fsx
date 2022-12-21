@@ -1,0 +1,184 @@
+open System
+
+let processLyrics (input: string seq) =
+    let invalidChars = set [ '.'; ':'; ';'; '?'; '!'; ','; '"'; '('; ')'; '\n'; '\r'; '…' ]
+
+    input
+    |> Seq.choose (fun x ->
+        if x.StartsWith '[' || String.IsNullOrWhiteSpace x then
+            None
+        else
+            String.filter (fun c -> Set.contains c invalidChars |> not) x
+            |> fun x -> x.ToLower().Split ' '
+            |> Some)
+    |> Seq.concat
+
+let parse (text: string) =
+    text.Replace('е', 'e').Replace(' ', ' ').Replace('’', '\'').Split '\n'
+    |> processLyrics
+    |> Seq.countBy id
+    |> Map.ofSeq
+
+let original = 
+    """[Writers:Taylor Swift]
+[Verse 1]
+Once upon a time
+I believe it was a Tuesday when I caught your eye
+And we caught onto something
+I hold onto the night
+You looked me in the eye and told me you loved me
+Were you just kidding?
+'Cause it seems to me
+This thing is breaking down, we almost never speak
+I don't feel welcome anymore
+Baby, what happened? Please tell me
+'Cause one second it was perfect
+Now you're halfway out the door
+
+[Chorus]
+And I stare at the phone, he still hasn't called
+And then you feel so low you can't feel nothing at all
+And you flashback to when he said, "forever and always"
+Oh, and it rains in your bedroom
+Everything is wrong
+It rains when you're here and it rains when you're gone
+'Cause I was there when you said, "forever and always"
+
+[Verse 2]
+Was I out of line?
+Did I say something way too honest, made you run and hide
+Like a scared little boy?
+I looked into your eyes
+Thought I knew you for a minute, now I'm not so sure
+So here's to everything coming down to nothing
+Here's to silence that cuts me to the core
+Where is this going?
+Thought I knew for a minute, but I don't anymore
+
+[Chorus]
+And I stare at the phone, he still hasn't called
+And then you feel so low you can't feel nothing at all
+And you flashback to when he said, "forever and always"
+Oh, and it rains in your bedroom
+Everything is wrong
+It rains when you're here and it rains when you're gone
+'Cause I was there when you said, "forever and always"
+You didn't mean it baby, I don't think so
+
+[Bridge]
+Oh, back up, baby, back up
+Did you forget everything?
+Back up, baby, back up
+Did you forget everything?
+
+[Chorus]
+'Cause it rains in your bedroom
+Everything is wrong
+It rains when you're here and it rains when you're gone
+'Cause I was there when you said, "forever and always"
+Oh, I stare at the phone, he still hasn't called
+And then you feel so low you can't feel nothing at all
+And you flashback to when we said, "forever and always"
+And it rains in your bedroom
+Everything is wrong
+It rains when you're here and it rains when you're gone
+'Cause I was there when you said, "forever and always"
+You didn't mean it baby
+You said, "forever and always," yeah
+
+""" |> parse
+
+let piano = 
+    """[Writers:Taylor Swift]
+[Verse 1]
+Once upon a time
+I believe it was a Tuesday when I caught your eye
+And we caught onto something
+I hold on to the night
+You looked me in the eye and told me you loved me
+Were you just kidding?
+'Cause it seems to me
+This thing is breaking down, we almost never speak
+I don't feel welcome anymore
+What happened? Please, tell me
+'Cause one second it was perfect
+Now you're halfway out the door
+
+[Chorus]
+And I stare at the phone, he still hasn't called
+And then you feel so low you can't feel nothing at all
+And you flashback to when he said, "Forever and always"
+And it rains in your bedroom
+Everything is wrong
+It rains when you're here and it rains when you're gone
+I was there when you said, "Forever and always"
+
+[Verse 2]
+Was I out of line?
+Did I say something way too honest, made you run and hide
+Like a scared little boy?
+I looked into your eyes
+Thought I knew you for a minute, now I'm not so sure
+So here's to everything coming down to nothing
+Here's to silence that cuts me to the core
+Where is this going?
+Thought I knew for a minute, but I don't anymore
+[Chorus]
+And I stare at the phone, he still hasn't called
+And then you feel so low you can't feel nothing at all
+You flashback to when he said, "Forever and always"
+Oh, and it rains in your bedroom
+Everything is wrong
+It rains when you're here and it rains when you're gone
+I was there when you said, "Forever and always"
+You didn't mean it baby, I don't think so
+
+[Bridge]
+Oh, oh-oh, oh-oh-oh
+Oh-oh, oh-oh-oh
+Back up, baby, back up
+Did you forget everythi-i-ing?
+Back up, baby, back up
+Did you forget everythi-i-ing?
+Back up, baby, back up
+Please, back up, oh, back up
+Back up, baby, back up
+
+[Chorus]
+'Cause it rains in your bedroom
+Everything is wrong
+It rains when you're here and it rains when you're gone
+I was there when you said, "Forever and always"
+And I stare at the phone, he still hasn't called
+And then you feel so low you can't feel nothing at all
+You flashback to when we said forever and always
+And it rains in your bedroom
+Everything is wrong
+It rains when you're here and it rains when you're gone
+I was there when you said, "Forever and always"
+You didn't mean it baby
+[Outro]
+You said, "Forever and always," yeah
+
+""" |> parse
+
+Seq.concat [ original.Keys; piano.Keys ]
+|> Seq.distinct
+|> Seq.choose (fun word ->
+    let original = 
+        match original.TryGetValue word with 
+        | true, x -> x
+        | _ -> 0
+        
+    let piano = 
+        match piano.TryGetValue word with
+        | true, x -> x
+        | _ -> 0
+    let d = piano - original
+    if d = 0
+    then None
+    else Some(word, d))
+|> Seq.sortByDescending (snd >> abs)
+|> Seq.iter (fun (x, y) -> printfn $"{x,-15} {y}")
+
+

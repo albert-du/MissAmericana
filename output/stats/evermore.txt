@@ -141,10 +141,6 @@ linreg:
 y = 8.909090909090908 * x + 332.7272727272727
 r = 0.09618099962494288
 
-linreg (averages):
-y = 5.2 * x + 354
-r = 0.33208029847154846
-
 Average Distinct Words, Writers
 1, 127.000000
 2, 133.000000
@@ -154,10 +150,6 @@ Average Distinct Words, Writers
 linreg: 
 y = 10.60909090909091 * x + 112.02727272727273
 r = 0.28215812460826756
-
-linreg (average): 
-y = 10.65 * x + 113.5
-r = 0.9577992669921884
 
 All Words:
 the             270
@@ -3608,5 +3600,3 @@ wondered, 1
 words, 1
 worse, 1
 yours, 1
-
-Miss Americana --- 2022-12-11T21:49:01

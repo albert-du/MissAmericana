@@ -3,7 +3,9 @@ open System.IO
 
 let fileout location func =
     let d = (FileInfo location).Directory
-    if not d.Exists then d.Create()
+
+    if not d.Exists then
+        d.Create()
 
     let out = Console.Out
 
@@ -69,13 +71,14 @@ type Track =
       Lyrics: string
       Frequencies: Map<string, int>
       Writers: string list }
-    member this.Ratio =
-        float this.Frequencies.Keys.Count / float this.Words.Length
+
+    member this.Ratio = float this.Frequencies.Keys.Count / float this.Words.Length
 
 // Data access
 
 let processLyrics (input: string seq) =
-    let invalidChars = set [ '.'; ':'; ';'; '?'; '!'; ','; '"'; '('; ')'; '\n'; '\r'; '…' ]
+    let invalidChars =
+        set [ '.'; ':'; ';'; '?'; '!'; ','; '"'; '('; ')'; '\n'; '\r'; '…' ]
 
     input
     |> Seq.choose (fun x ->
@@ -89,9 +92,7 @@ let processLyrics (input: string seq) =
 
 let parseWriters (encoded: string) =
     if encoded.StartsWith "[Writers:" && encoded.Trim().EndsWith ']' then
-        (stringBetween "[Writers:" encoded "]").Split ';'
-        |> Seq.toList
-        |> Some
+        (stringBetween "[Writers:" encoded "]").Split ';' |> Seq.toList |> Some
     else
         None
 
@@ -100,6 +101,7 @@ let parseName (encoded: string) =
 
 let processSong name (text: string) =
     let lines = text.Replace('е', 'e').Replace(' ', ' ').Replace('’', '\'').Split '\n'
+
     let writers =
         parseWriters lines[0]
         |> function
@@ -118,21 +120,25 @@ let processSong name (text: string) =
 
 let fromAlbum (name: string) =
     DirectoryInfo("./data/taylor-swift").GetDirectories()
-    |> Array.where (fun x -> ((x.Name.Replace("-3am", "").Replace("-taylors-version", "").Replace("-edition", "").Replace("-deluxe", "").Replace('-', ' ').Split('_')[1]).ToLower()) = name.ToLower())
+    |> Array.where (fun x ->
+        ((x
+            .Name
+            .Replace("-3am", "")
+            .Replace("-taylors-version", "")
+            .Replace("-edition", "")
+            .Replace("-deluxe", "")
+            .Replace('-', ' ')
+            .Split('_')[1])
+            .ToLower()) = name.ToLower())
     |> Array.rev
     |> Array.collect (fun album -> album.GetFiles())
-    |> Array.Parallel.map (fun song ->
-        File.ReadAllText song.FullName
-        |> processSong song.Name)
+    |> Array.Parallel.map (fun song -> File.ReadAllText song.FullName |> processSong song.Name)
     |> Array.toList
 
 let tracksStats tracks =
     printfn "\nTrack List:"
 
-    let w =
-        List.map (fun x -> x.Name.Length) tracks
-        |> List.max
-        |> (+) 1
+    let w = List.map (fun x -> x.Name.Length) tracks |> List.max |> (+) 1
 
     for t in tracks do
         List.sort t.Writers
@@ -140,16 +146,20 @@ let tracksStats tracks =
         |> printfn "%2i %-*s%-4i%s" t.Index w t.Name t.Writers.Length
 
     printfn "\nIndex, Writers, Words, Distinct Words, Track"
+
     tracks
     |> List.sortBy (fun x -> x.Index)
-    |> List.iter (fun x -> printfn $"{x.Index}, {x.Writers.Length}, {x.Words.Length}, {x.Frequencies.Keys.Count}, {x.Name}")
+    |> List.iter (fun x ->
+        printfn $"{x.Index}, {x.Writers.Length}, {x.Words.Length}, {x.Frequencies.Keys.Count}, {x.Name}")
 
     printfn "\nTrack, Writers, Words, Distinct Words"
+
     tracks
     |> List.sortBy (fun x -> x.Index)
     |> List.iter (fun x -> printfn $"{x.Name}, {x.Writers.Length}, {x.Words.Length}, {x.Frequencies.Keys.Count}")
 
     printfn "\nWriters, Number of tracks"
+
     tracks
     |> List.countBy (fun x -> x.Writers.Length)
     |> List.sortBy fst
@@ -189,15 +199,12 @@ let tracksStats tracks =
     for x, y in points do
         printfn "%i, %f" x y
 
-    let x = 
+    let x =
         List.map (fun x -> float x.Writers.Length, float x.Words.Length) tracks
         |> linreg
 
     printfn $"\nlinreg: \ny = {x.M} * x + {x.B}\nr = {x.R}"
 
-    let x = linreg (List.map (fun (x, y) -> float x, y) points)
-
-    printfn $"\nlinreg (averages):\ny = {x.M} * x + {x.B}\nr = {x.R}"
     printfn "\nAverage Distinct Words, Writers"
 
     let points =
@@ -208,16 +215,14 @@ let tracksStats tracks =
     for x, y in points do
         printfn "%i, %f" x y
 
-    let x = 
+    let x =
         List.map (fun x -> float x.Writers.Length, float x.Frequencies.Keys.Count) tracks
         |> linreg
 
     printfn $"\nlinreg: \ny = {x.M} * x + {x.B}\nr = {x.R}"
 
-    let x = linreg (List.map (fun (x, y) -> float x, y) points)
-
-    printfn $"\nlinreg (average): \ny = {x.M} * x + {x.B}\nr = {x.R}"
     printfn "\nAll Words:"
+
     List.collect (fun x -> x.Words) tracks
     |> List.countBy id
     |> List.sortBy (fun (a, b) -> -b, a)
@@ -225,6 +230,7 @@ let tracksStats tracks =
 
     for track in tracks do
         printfn $"\nWords of \"{track.Name}\":"
+
         Seq.map (fun (KeyValue(x, y)) -> x, y) track.Frequencies
         |> Seq.sortBy (fun (a, b) -> -b, a)
         |> Seq.iter (fun (x, y) -> printfn $"{x}, {y}")
@@ -247,54 +253,81 @@ let generateDiscographyReport () =
 
     tracks |> tracksStats
 
-let s = DateTime.Now
 
-fileout "./output/stats/ALL.txt" generateDiscographyReport
+let albums = List.map fromAlbum ts
 
-for album in ts do
-    fileout $"./output/stats/{album}.txt" (fun _ -> generateReport album)
+albums |> List.map (fun x -> x.Length)
 
-fileout $"./output/data.md" (fun _ -> 
-    printfn "# Additional Data\n"
-    printfn "## Taylor Swift"
-    let tracks = fromAlbum tstaylorswift |> List.sortBy (fun x -> x.Index)
-    
-    List.map (fun x -> string x.Writers.Length) tracks
-    |> String.concat ", "
-    |> printfn "\nwriters = {%s}"
+albums
+|> List.iteri (fun i x -> x |> List.iter (fun t -> printfn $"{i + 1},{t.Words.Length}"))
 
-    List.sumBy (fun x -> x.Writers.Length) tracks
-    |> printfn "sum = %i"
+albums
+|> List.iteri (fun i x ->
+    x
+    |> List.iter (fun t -> printfn $"{i + 1},{float t.Frequencies.Keys.Count / float t.Words.Length}"))
 
-    let squares = List.map (fun x -> float x.Writers.Length ** 2) tracks
-    List.map string squares
-    |> String.concat ", " 
-    |> printfn "squares = {%s}"
-    List.sum squares
-    |> printfn "sum of squares = %f"
-
-    List.map (fun x -> string x.Words.Length) tracks
-    |> String.concat ", "
-    |> printfn "\nwords = {%s}"
-
-    List.sumBy (fun x -> x.Words.Length) tracks
-    |> printfn "sum = %i"
-
-    let squares2 = List.map (fun x -> float x.Words.Length ** 2) tracks
-    List.map string squares2
-    |> String.concat ", " 
-    |> printfn "squares = {%s}"
-    List.sum squares2
-    |> printfn "sum of squares = %f"
-    let xy = List.map (fun x -> x.Writers.Length * x.Words.Length) tracks
-    List.map string xy
-    |> String.concat ", " 
-    |> printfn "\nxy = {%s}"
-
-    List.sum xy
-    |> printfn "sum xy = %i"
-    
-)
+albums
+|> List.iteri (fun i x ->
+    x
+    |> List.iter (fun t -> printfn $"{i + 1},{t.Words |> List.map (fun x -> float x.Length) |> List.average}"))
 
 
-printfn $"Evaluated in {(DateTime.Now - s).TotalSeconds} seconds"
+List.map (fun x -> x |> List.averageBy (fun x -> float x.Words.Length)) albums
+|> List.iter (printfn "%f")
+
+
+List.map (fun x -> x |> List.sumBy (fun x -> float x.Words.Length)) albums
+|> List.iter (printfn "%f")
+
+
+// let s = DateTime.Now
+
+// fileout "./output/stats/ALL.txt" generateDiscographyReport
+
+// for album in ts do
+//     fileout $"./output/stats/{album}.txt" (fun _ -> generateReport album)
+
+// fileout $"./output/data.md" (fun _ ->
+//     printfn "# Additional Data\n"
+//     printfn "## Taylor Swift"
+//     let tracks = fromAlbum tstaylorswift |> List.sortBy (fun x -> x.Index)
+
+//     List.map (fun x -> string x.Writers.Length) tracks
+//     |> String.concat ", "
+//     |> printfn "\nwriters = {%s}"
+
+//     List.sumBy (fun x -> x.Writers.Length) tracks
+//     |> printfn "sum = %i"
+
+//     let squares = List.map (fun x -> float x.Writers.Length ** 2) tracks
+//     List.map string squares
+//     |> String.concat ", "
+//     |> printfn "squares = {%s}"
+//     List.sum squares
+//     |> printfn "sum of squares = %f"
+
+//     List.map (fun x -> string x.Words.Length) tracks
+//     |> String.concat ", "
+//     |> printfn "\nwords = {%s}"
+
+//     List.sumBy (fun x -> x.Words.Length) tracks
+//     |> printfn "sum = %i"
+
+//     let squares2 = List.map (fun x -> float x.Words.Length ** 2) tracks
+//     List.map string squares2
+//     |> String.concat ", "
+//     |> printfn "squares = {%s}"
+//     List.sum squares2
+//     |> printfn "sum of squares = %f"
+//     let xy = List.map (fun x -> x.Writers.Length * x.Words.Length) tracks
+//     List.map string xy
+//     |> String.concat ", "
+//     |> printfn "\nxy = {%s}"
+
+//     List.sum xy
+//     |> printfn "sum xy = %i"
+
+// )
+
+
+// printfn $"Evaluated in {(DateTime.Now - s).TotalSeconds} seconds"

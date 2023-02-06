@@ -135,18 +135,10 @@ linreg:
 y = NaN * x + NaN
 r = NaN
 
-linreg (averages):
-y = NaN * x + NaN
-r = NaN
-
 Average Distinct Words, Writers
 1, 143.588235
 
 linreg: 
-y = NaN * x + NaN
-r = NaN
-
-linreg (average): 
 y = NaN * x + NaN
 r = NaN
 
@@ -3645,5 +3637,3 @@ work, 1
 yay, 1
 yeah, 1
 you”, 1
-
-Miss Americana --- 2022-12-11T21:49:00

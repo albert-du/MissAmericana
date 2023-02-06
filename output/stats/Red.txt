@@ -123,7 +123,6 @@ Writers, Distinct Words, Name
 1,	 128,		 better man tv ftv
 1,	 137,		 the moment i knew tv
 1,	 148,		 nothing new tv ftv
-
 2,	 95,		 babe tv ftv
 2,	 101,		 treacherous tv
 2,	 108,		 everything has changed tv
@@ -134,7 +133,6 @@ Writers, Distinct Words, Name
 2,	 194,		 i bet you think about me tv ftv
 2,	 199,		 all too well tv
 2,	 333,		 all too well 10mv tv ftv
-
 3,	 88,		 message in a bottle tv ftv
 3,	 95,		 the last time tv
 3,	 104,		 i knew you were trouble tv
@@ -219,10 +217,6 @@ linreg:
 y = 43.30597014925373 * x + 299.4029850746268
 r = 0.26156622650188854
 
-linreg (averages):
-y = 33.547619047619115 * x + 316.3174603174602
-r = 0.6642985577262123
-
 Average Distinct Words, Writers
 1, 118.357143
 2, 153.400000
@@ -231,10 +225,6 @@ Average Distinct Words, Writers
 linreg: 
 y = -1.2313432835820894 * x + 129.13432835820896
 r = -0.02077985443035494
-
-linreg (average): 
-y = -7.595238095238149 * x + 140.1650793650795
-r = -0.2948212245645487
 
 All Words:
 you             600
@@ -5351,5 +5341,3 @@ won't, 1
 wondered, 1
 would, 1
 you're, 1
-
-Miss Americana --- 2022-12-11T21:49:00
